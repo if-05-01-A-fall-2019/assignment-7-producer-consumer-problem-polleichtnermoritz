@@ -15,6 +15,7 @@ public class ProducerConsumer {
     static Semaphore producer = new Semaphore(1);
     static Semaphore consumer = new Semaphore(0);
     static LinkedList<Integer> buffer = new LinkedList<Integer>();
+    private static int N = 5;
     Random random = new Random();
 
     public void produce() throws InterruptedException{
@@ -23,7 +24,8 @@ public class ProducerConsumer {
             item = random.nextInt();
             Thread.sleep(1000);
             try {
-                producer.acquire();
+                if (buffer.size() == N)
+                    producer.acquire();
             } catch (InterruptedException ex) {
                 System.out.println("An error occured:"+ex.getMessage());
             }
@@ -31,21 +33,24 @@ public class ProducerConsumer {
             System.out.println("Producer produced " + item);
 
             buffer.add(item);
-            consumer.release();
+            if (buffer.size() == 1)
+                consumer.release();
         }
     }
 
     public void consume() throws InterruptedException{
         while(true){
             try {
-                consumer.acquire();
+                if (buffer.size() == 0)
+                    consumer.acquire();
             } catch (InterruptedException ex) {
                 System.out.println("An error occured:"+ex.getMessage());
             }
 
             System.out.println("Consumer consumed " + buffer.remove(buffer.size() -1));
 
-            producer.release();
+            if (buffer.size() == N - 1)
+                producer.release();
             Thread.sleep(1000);
         }
 
