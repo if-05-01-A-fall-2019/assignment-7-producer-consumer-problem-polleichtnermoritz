@@ -1,6 +1,7 @@
 package ProducerConsumer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ public class ProducerConsumer {
 
     static Semaphore producer = new Semaphore(1);
     static Semaphore consumer = new Semaphore(0);
-    static List<Integer> buffer = new ArrayList<Integer>();
+    static LinkedList<Integer> buffer = new LinkedList<Integer>();
     Random random = new Random();
 
     public void produce() throws InterruptedException{
@@ -42,7 +43,7 @@ public class ProducerConsumer {
                 System.out.println("An error occured:"+ex.getMessage());
             }
 
-            System.out.println("Consumer consumed " + buffer.get(0));
+            System.out.println("Consumer consumed " + buffer.remove(buffer.size() -1));
 
             producer.release();
             Thread.sleep(1000);

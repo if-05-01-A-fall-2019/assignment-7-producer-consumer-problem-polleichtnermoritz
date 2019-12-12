@@ -37,7 +37,7 @@ public class ProducerConsumer {
                     wait();
                 }
 
-                item = buffer.remove(0);
+                item = buffer.remove(buffer.size() - 1);
                 System.out.println("Consumer consumed " + item);
                 if (buffer.size() == size - 1)
                     notify();
